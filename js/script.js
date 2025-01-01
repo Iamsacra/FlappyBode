@@ -8,11 +8,17 @@ const finalScoreDisplay = document.getElementById("final-score");
 const startButton = document.getElementById("start-button");
 const restartButton = document.getElementById("restart-button");
 
+// Bird properties
 let birdTop = 250;
-let gravity = 4;
-let jumpStrength = 65;
+let birdVelocity = 0;
+const gravity = 0.5;
+const jumpStrength = -10;
+
+// Pipe properties
 let pipeSpeed = 3;
 const pipeGap = 200;
+
+// Game state
 let isGameOver = false;
 let score = 0;
 
@@ -32,15 +38,16 @@ restartButton.addEventListener("click", () => {
 // Handle bird jump with Spacebar
 document.addEventListener("keydown", (e) => {
   if (e.code === "Space" && !isGameOver) {
-    birdTop -= jumpStrength;
+    birdVelocity = jumpStrength;
   }
 });
 
 function startGame() {
   birdTop = 250;
+  birdVelocity = 0;
   score = 0;
   isGameOver = false;
-  scoreDisplay.textContent = `Score: ${score}`;
+  scoreDisplay.textContent = `Pontos: ${score}`;
   bird.style.top = birdTop + "px";
   pipeContainer.innerHTML = ""; // Clear old pipes
   gameLoop();
@@ -48,6 +55,7 @@ function startGame() {
 
 function resetGame() {
   birdTop = 250;
+  birdVelocity = 0;
   score = 0;
   isGameOver = false;
   pipeContainer.innerHTML = ""; // Remove all pipes
@@ -56,8 +64,9 @@ function resetGame() {
 function gameLoop() {
   if (isGameOver) return;
 
-  // Gravity
-  birdTop += gravity;
+  // Update bird position with velocity and gravity
+  birdVelocity += gravity;
+  birdTop += birdVelocity;
   bird.style.top = birdTop + "px";
 
   // Check for ground or ceiling collision
@@ -65,9 +74,10 @@ function gameLoop() {
     endGame();
   }
 
-  // Pipe movement and collision
+  // Move pipes and check for collisions
   movePipes();
 
+  // Request the next frame
   requestAnimationFrame(gameLoop);
 }
 
@@ -82,11 +92,11 @@ function movePipes() {
     // Remove pipes out of bounds
     if (pipeLeft < -50) pipe.remove();
 
-    // Increment score when bird passes a pipe
+    // Increment score only once
     if (pipeLeft + pipeSpeed < bird.offsetLeft && !pipe.scored) {
       pipe.scored = true; // Mark pipe as scored
-      score++;
-      scoreDisplay.textContent = `Score: ${score}`;
+      score += 0.5;
+      scoreDisplay.textContent = `Pontos: ${score}`;
     }
 
     // Collision detection
@@ -95,21 +105,16 @@ function movePipes() {
       pipeLeft + 50 > bird.offsetLeft
     ) {
       if (
-        pipe.classList.contains("pipe-top") &&
-        birdTop < pipe.offsetHeight
-      ) {
-        endGame();
-      }
-      if (
-        pipe.classList.contains("pipe-bottom") &&
-        birdTop + bird.offsetHeight > gameContainer.offsetHeight - pipe.offsetHeight
+        (pipe.classList.contains("pipe-top") && birdTop < pipe.offsetHeight) ||
+        (pipe.classList.contains("pipe-bottom") &&
+        birdTop + bird.offsetHeight > gameContainer.offsetHeight - pipe.offsetHeight)
       ) {
         endGame();
       }
     }
   });
 
-  // Generate new pipes
+  // Generate new pipes if needed
   if (pipes.length < 2 || pipes[pipes.length - 1].style.left < "200px") {
     createPipePair();
   }
@@ -137,3 +142,9 @@ function endGame() {
   finalScoreDisplay.textContent = score;
   gameOverMenu.classList.remove("hidden");
 }
+
+const backButton = document.getElementById("back-button");
+
+backButton.addEventListener("click", () => {
+  window.location.href = "index.html"; // Adjust the path if needed
+});

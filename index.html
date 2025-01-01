@@ -3,24 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flappy Bird Clone</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Flappy Goat</title>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <div id="game-container">
-    <div id="start-menu" class="menu">
-      <h1>Flappy Bird</h1>
-      <button id="start-button">Start Game</button>
+    <div id="game-container">
+      <div id="start-menu" class="menu">
+        <h1>Flappy Bode 🐐</h1>
+        <button id="start-button">Começar</button>
+      </div>
+      <div id="game-over-menu" class="menu hidden">
+        <h1>Fim 🙁</h1>
+        <p>Pontos: <span id="final-score">0</span></p>
+        <button id="restart-button">Recomeçar</button>
+      </div>
+      <div id="bird"></div>
+      <div id="pipe-container"></div>
+      <div id="score">Pontos: 0</div>
     </div>
-    <div id="game-over-menu" class="menu hidden">
-      <h1>Game Over</h1>
-      <p>Score: <span id="final-score">0</span></p>
-      <button id="restart-button">Restart</button>
-    </div>
-    <div id="bird"></div>
-    <div id="pipe-container"></div>
-    <div id="score">Score: 0</div>
-  </div>
-  <script src="script.js"></script>
-</body>
+    <script src="/js/script.js"></script>
+  </body>
+
 </html>
